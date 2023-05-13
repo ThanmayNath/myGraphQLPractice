@@ -48,6 +48,28 @@ const resolvers = {
         throw new Error("Failed to retrieve user.");
       }
     },
+    posts: async () => {
+      try {
+        const q = "SELECT * FROM user_post";
+        const data = await new Promise((resolve, reject) => {
+          db.query(q, (err, data) => {
+            if (err) reject(err);
+            resolve(data);
+          });
+        });
+        const formattedData = data.map((post) => ({
+          id: post.id,
+          userID: post.u_id,
+          title: post.title,
+          description: post.desc,
+          path: post.file_id,
+        }));
+        return formattedData;
+      } catch (error) {
+        console.error("Error retrieving posts:", error);
+        throw new Error("Failed to retrieve user posts.");
+      }
+    },
   },
 };
 
